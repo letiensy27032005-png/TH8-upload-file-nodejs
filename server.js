@@ -1,7 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 
-const app = express();
+const app = express(); // 🔥 BẮT BUỘC PHẢI CÓ
 
 // cấu hình lưu file
 const storage = multer.diskStorage({
@@ -9,6 +9,7 @@ const storage = multer.diskStorage({
     filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname)
 });
 
+// upload nhiều file
 const uploadManyFiles = multer({ storage: storage }).array("many-files", 17);
 
 // form
@@ -25,7 +26,14 @@ app.get("/", (req, res) => {
 app.post("/upload", (req, res) => {
     uploadManyFiles(req, res, (err) => {
         if (err) return res.send("Lỗi upload");
-        res.send("Upload nhiều file thành công");
+
+        const fileCount = req.files.length;
+
+        if (fileCount === 1) {
+            res.send("Upload thành công");
+        } else {
+            res.send("Upload nhiều file thành công");
+        }
     });
 });
 
